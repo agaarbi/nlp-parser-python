@@ -1,5 +1,8 @@
 docs/
 
+#vscode configs
+.vscode
+
 # Environments
 .venv
 env/
