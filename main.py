@@ -1,4 +1,5 @@
 import entities
+from textblob import TextBlob
 
 import json
 from collections import Counter
@@ -6,7 +7,7 @@ import en_core_web_sm
 nlp = en_core_web_sm.load()
 
 # query = input('Enter your query: ')
-query = "Putin and Imran Khan Met in Russia before the Ukranian War in february 2022"
+query = "Putin and Imran Khan Met in Rusia before the Ukranian War in feburuary 2022"
 print(query)
 
 nlp_query = nlp(query)
@@ -19,7 +20,18 @@ locations_labels = ['FAC', 'ORG', 'GPE', 'LOC']
 events_labels = ['EVENT']
 time_references_labels = ['DATE', 'TIME']
 
+# take out the Persons before applying spell checker
 for entry in nlp_query:
+    if entry.ent_type_ in persons_labels:
+        query_ner.persons = entry.text
+
+# spell correction is applied after populating persons
+# because it trys to correct names by english words
+spell_correction = TextBlob(query).correct()
+nlp_query_corrected = nlp(str(spell_correction))
+ 
+# populating entities
+for entry in nlp_query_corrected:
     if entry.ent_type_ in persons_labels:
         query_ner.persons = entry.text
     elif entry.ent_type_ in groups_labels:
