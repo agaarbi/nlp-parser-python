@@ -30,11 +30,9 @@ for entry in nlp_query:
 spell_correction = TextBlob(query).correct()
 nlp_query_corrected = nlp(str(spell_correction))
  
-# populating entities
+# populating entities other than persons (as persons are done before)
 for entry in nlp_query_corrected:
-    if entry.ent_type_ in persons_labels:
-        query_ner.persons = entry.text
-    elif entry.ent_type_ in groups_labels:
+    if entry.ent_type_ in groups_labels:
         query_ner.groups = entry.text
     elif entry.ent_type_ in locations_labels:
         query_ner.locations = entry.text
